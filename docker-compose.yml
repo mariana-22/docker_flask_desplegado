@@ -22,7 +22,7 @@ services:
       - mysql-data:/var/lib/mysql
     networks:
       - red-ejemplo-082
-    health-check:
+    healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
@@ -35,7 +35,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      healthcheck:
+    healthcheck:
       test:  ["CMD-SHELL", "curl -f http://localhost:5050/ || exit 1"]
       interval: 10s
       timeout: 5s
