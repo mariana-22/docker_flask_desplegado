@@ -27,6 +27,18 @@ services:
       timeout: 5s
       retries: 3
 
+
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma
+    restart: always
+    ports:
+      - "3001:3001"
+    volumes:
+      - uptime-kuma-data:/app/data
+    networks:
+      - red-ejemplo-082
+
   app-backend:
     image: mariana220308/sample-api:v1
     container_name: backend-082
@@ -47,6 +59,10 @@ services:
 
 volumes:
   mysql-data:
+  uptime-kuma-data:
 
 networks:
   red-ejemplo-082:
+  
+   
+    
