@@ -26,7 +26,7 @@ jobs:
           push: true
           tags: mariana220308/sample-api:v1
       - name: Desplegar en el servidor cloud
-        uses: appleboy/ssh-action@1.0.3
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
