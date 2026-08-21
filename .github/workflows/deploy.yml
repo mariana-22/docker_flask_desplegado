@@ -27,9 +27,11 @@ jobs:
       - name: Ejecutar pruebas pytest
         run: pytest 
   build-and-push:
+  needs: test
     runs-on: ubuntu-latest
 
-    steps:
+    
+  steps:
       - name: Descargar código
         uses: actions/checkout@v4
 
