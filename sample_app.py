@@ -13,7 +13,7 @@ def home():
             database='082_db'
         )
         conn.close()
-        db_status = "Conexión exitosa a la base de datos"
+        db_status = "Conexión exitosa a la base de datos prueba ppara C.I, CD para despliegue continuo"
     except Exception as e:
         db_status = f"Error al conectar a la base de datos: {e}"
         
