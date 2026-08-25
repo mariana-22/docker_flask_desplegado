@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Descargar código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Configurar Python
         uses: actions/setup-python@v5
@@ -22,9 +22,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           python -m pip install pytest bandit
-          
-      - name: Escaneo  de seguridad (bondit)
-        run : bandit -r - -s B101 
+
+      - name: Escaneo de seguridad SAST con Bandit
+        run: |
+          bandit -r . -ll
 
       - name: Ejecutar pruebas pytest
         run: pytest
@@ -44,14 +45,14 @@ jobs:
           password: ${{ secrets.DOCKER_PASWORD }}
 
       - name: Construir y subir imagen
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: false
           load: true
           tags: mariana220308/sample-api:v1
 
-      - name: Escanear contenedor con trivy
+      - name: Escanear contenedor con Trivy
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: mariana220308/sample-api:v1
@@ -60,8 +61,8 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH,MEDIUM'
-      
-      - name: Subir la imaguen a Docker hub
+
+      - name: Subir la imagen a Docker Hub
         run: docker push mariana220308/sample-api:v1
 
       - name: Desplegar en el servidor cloud
@@ -73,4 +74,4 @@ jobs:
           script: |
             cd ~/docker_flask_desplegado
             docker compose pull app-backend
-            docker compose up -d 
+            docker compose up -d
