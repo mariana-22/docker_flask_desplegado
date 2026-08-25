@@ -28,4 +28,4 @@ def home():
 
 if __name__ == "__main__":
     # debug=False evita B201 y 127.0.0.1 evita B104 para desarrollo local
-    sample.run(host="127.0.0.1", port=5050, debug=True)
+   sample.run(host="0.0.0.0", port=5000, debug=True)
