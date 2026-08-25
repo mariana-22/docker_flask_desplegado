@@ -2,3 +2,5 @@ venv/
 .env
 sample_app.sh
 *.pem
+llave-ec2.pem
+npm_data/
