@@ -4,16 +4,16 @@ services:
     container_name: proxy-manager
     restart: always
     ports:
-      - "80:80" # Http
-      - "81:81" # Administración de la API
-      - "443:443" # Https
+      - "80:80"
+      - "81:81"
+      - "443:443"
     volumes:
       - ./npm_data:/data
       - ./npm_letsencrypt:/etc/letsencrypt
     networks:
-      - red-ejemplo-082
+      - red-cba
 
-  db:
+  servidor-bd:
     image: mysql:8.0
     container_name: servidor-bd-082
     restart: always
@@ -23,9 +23,31 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
-      - red-ejemplo-082
+      - red-cba
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  app-backend:
+    image: mariana220308/sample-api:v1
+    container_name: backend-082
+    restart: always
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    networks:
+      - red-cba
+    depends_on:
+      servidor-bd:
+        condition: service_healthy
+    ports:
+      - "5050:5050"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5050/ || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -39,33 +61,14 @@ services:
     volumes:
       - uptime-kuma-data:/app/data
     networks:
-      - red-ejemplo-082
+      - red-cba
 
-  app-backend:
-    image: mariana220308/sample-api:v1
-    container_name: backend-082
-    restart: always
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      DB_HOST: ${DB_HOST}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: ${DB_NAME}
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5050/ || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-    ports:
-      - "5050:5050"
-    networks:
-      - red-ejemplo-082
+networks:
+  red-cba:
+    name: red-cba-ejemplo
 
 volumes:
   mysql-data:
+    name: mysql-data
   uptime-kuma-data:
-
-networks:
-  red-ejemplo-082:
+    name: uptime-kuma-data
