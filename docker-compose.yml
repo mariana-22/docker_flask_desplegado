@@ -4,12 +4,15 @@ services:
     container_name: proxy-manager
     restart: always
     ports:
-      - "80:80" #Http
-      - "81:81" #Administración de la API
-      - "443:443" #Https
+      - "80:80"
+      - "81:81"
+      - "443:443"
     volumes:
-  - ./nginx:/etc/nginx/conf.d
-  - ./nginx/.htpasswd:/etc/nginx/.htpasswd
+      - ./nginx:/etc/nginx/conf.d
+      - ./nginx/.htpasswd:/etc/nginx/.htpasswd
+    networks:
+      - red-ejemplo-082
+
   db:
     image: mysql:8.0
     container_name: servidor-bd-082
@@ -26,7 +29,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
-
 
   uptime-kuma:
     image: louislam/uptime-kuma:1
@@ -47,7 +49,7 @@ services:
       db:
         condition: service_healthy
     healthcheck:
-      test:  ["CMD-SHELL", "curl -f http://localhost:5050/ || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://localhost:5050/ || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -55,7 +57,6 @@ services:
       - "5050:5050"
     networks:
       - red-ejemplo-082
-  
 
 volumes:
   mysql-data:
@@ -63,6 +64,3 @@ volumes:
 
 networks:
   red-ejemplo-082:
-  
-   
-    
