@@ -36,9 +36,9 @@ def home():
 
 
 if __name__ == "__main__":
-    # FALLO INTENCIONAL PARA EL EJERCICIO DE SAST/BANDIT
+    # FALLO INTENCIONAL PARA BANDIT
     sample.run(
         host="127.0.0.1",
         port=5050,
-        debug=False
+        debug=True
     )
