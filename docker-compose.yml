@@ -48,6 +48,11 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:5050/ || exit 1"]
       interval: 10s
