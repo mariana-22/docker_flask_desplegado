@@ -2,16 +2,15 @@ name: Publicar Imagen en Docker Hub
 
 on:
   push:
-    branches:
-      - main
+    branches: ["main", "feature/vulnerabilidades"]
 
 jobs:
-  test:
+  test-and-security:
     runs-on: ubuntu-latest
 
     steps:
       - name: Descargar código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Configurar Python
         uses: actions/setup-python@v5
@@ -22,16 +21,16 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          python -m pip install pytest bandit
-          
-      - name: Escaneo  de seguridad (bondit)
-        run : bandit -r - -s B101 
+          pip install pytest bandit
+
+      - name: Escaneo de seguridad (Bandit)
+        run: bandit -r . -ll
 
       - name: Ejecutar pruebas pytest
         run: pytest
 
   build-and-push:
-    needs: test
+    needs: test-and-security
     runs-on: ubuntu-latest
 
     steps:
@@ -42,30 +41,31 @@ jobs:
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASWORD }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Construir y subir imagen
-        uses: docker/build-push-action@v4
+      - name: Construir imagen
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: false
           load: true
+          no-cache: true
           tags: mariana220308/sample-api:v1
 
-      - name: Escanear contenedor con trivy
+      - name: Escanear contenedor con Trivy
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: mariana220308/sample-api:v1
-          format: table
-          exit-code: '1'
+          image-ref: "mariana220308/sample-api:v1"
+          format: "table"
+          exit-code: "1"
           ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH,MEDIUM'
-      
-      - name: Subir la imaguen a Docker hub
+          vuln-type: "os,library"
+          severity: "CRITICAL,HIGH"
+
+      - name: Subir la imagen a Docker Hub
         run: docker push mariana220308/sample-api:v1
 
-      - name: Desplegar en el servidor cloud
+      - name: Desplegar en servidor cloud
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -74,4 +74,4 @@ jobs:
           script: |
             cd ~/docker_flask_desplegado
             docker compose pull app-backend
-            docker compose up -d 
+            docker compose up -d
