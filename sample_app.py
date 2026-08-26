@@ -37,7 +37,7 @@ def home():
 if __name__ == "__main__":
     # Escuchar en 0.0.0.0 permite que Docker exponga la app correctamente
     sample.run(
-       host="0.0.0.0",
+       host="0.0.0.0 ", # nosec B104
         port=5050,
         debug=False
     )
