@@ -45,7 +45,7 @@ jobs:
 
       - name: Construir imagen
         uses: docker/build-push-action@v6
-        with:
+        with: 
           context: .
           push: false
           load: true
