@@ -4,12 +4,12 @@ services:
     container_name: proxy-manager
     restart: always
     ports:
-      - "80:80"
-      - "81:81"
-      - "443:443"
+      - "80:80" # Http
+      - "81:81" # Administración de la API
+      - "443:443" # Https
     volumes:
-      - ./nginx:/etc/nginx/conf.d
-      - ./nginx/.htpasswd:/etc/nginx/.htpasswd
+      - ./npm_data:/data
+      - ./npm_letsencrypt:/etc/letsencrypt
     networks:
       - red-ejemplo-082
 
