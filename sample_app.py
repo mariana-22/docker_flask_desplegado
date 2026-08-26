@@ -1,5 +1,7 @@
 import os
+
 from flask import Flask
+
 import pymysql
 
 sample = Flask(__name__)
@@ -7,6 +9,7 @@ sample = Flask(__name__)
 
 @sample.route("/")
 def home():
+
     try:
         # Se leen las credenciales desde variables de entorno
         db_host = os.getenv("DB_HOST", "servidor-bd-082")
@@ -28,7 +31,8 @@ def home():
     except Exception as e:
         db_status = f"Error al conectar a la base de datos: {e}"
 
-    return f"<h1>Bienvenido a la aplicación Flask</h1><p>{db_status}</p>"
+    # FALLO INTENCIONAL PARA EL EJERCICIO
+    return f"<h1>Error intencional</h1><p>{db_status}</p>", 500
 
 
 if __name__ == "__main__":
