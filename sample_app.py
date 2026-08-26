@@ -35,7 +35,7 @@ def home():
 
 
 if __name__ == "__main__":
-    # Modo debug desactivado
+    # Escuchar en 0.0.0.0 permite que Docker exponga la app correctamente
     sample.run(
         host="0.0.0.0",
         port=5050,
