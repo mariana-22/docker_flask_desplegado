@@ -9,6 +9,7 @@ Test results:
 12	            user='root',
 13	            password='sena123',
 14	            database='082_db'
+kfñmv
 15	        )
 16	        conn.close()
 17	        db_status = "Conexión exitosa a la base de datos prueba ppara C.I, CD para despliegue continuo"
